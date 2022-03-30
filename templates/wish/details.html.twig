@@ -1,7 +1,11 @@
 {%  extends 'base.html.twig' %}
 
 {% block main %}
-<h1>Wish #{{ id }} details</h1>
+    <h1>{{ wish.title }}</h1>
+    {% if wish.description %}
+        <p>{{ wish.description }}</p>
+    {% endif %}
+    <p>Wish created by {{ wish.author }} at {{ wish.dateCreated | date('m/d/Y') }}</p>
 {% endblock %}
 
-{% block title %}Wish #{{ id }} details | {{ parent() }}{% endblock %}
+{% block title %}Wish #{{ wish.id }} details | {{ parent() }}{% endblock %}
