@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Wish;
+use App\Form\WishType;
 use App\Repository\WishRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,11 +23,30 @@ class WishController extends AbstractController
     public function details($id, WishRepository $repository): Response
     {
         $wish = $repository->find($id);
+        //$wish = $repository->findOneById($id);
+        //$wish = $repository->findOneBy(['id'=>$id]);
         if(!$wish)
             throw $this->createNotFoundException();
         return $this->render('wish/details.html.twig', [
             'wish' => $wish,
         ]);
+    }
+
+    #[Route('/wish/add', name: 'app_wish_add')]
+    public function add(Request $request, EntityManagerInterface $entityManager): Response {
+        $wish = new Wish();
+        $form = $this->createForm(WishType::class, $wish);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $wish->setIsPublished(true);
+            $wish->setDateCreated(new \DateTime());
+            $entityManager->persist($wish);
+            $entityManager->flush();
+            $this->addFlash('ok', 'Idea successfully added!');
+            return $this->redirectToRoute('app_wish_details', ['id'=>$wish->getId()]);
+        }
+        $formView = $form->createView();
+        return $this->render('wish/add.html.twig', compact('formView'));
     }
 
     #[Route('/wish/DEBUG/jeuessai')]

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\WishRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WishRepository::class)]
 class Wish
@@ -14,12 +16,14 @@ class Wish
     private $id;
 
     #[ORM\Column(type: 'string', length: 250)]
+    #[Assert\NotBlank()]
     private $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     #[ORM\Column(type: 'string', length: 50)]
+    #[Assert\NotBlank()]
     private $author;
 
     #[ORM\Column(type: 'boolean')]
@@ -71,12 +75,12 @@ class Wish
 
     public function getIsPublished(): ?bool
     {
-        return $this->isPublish;
+        return $this->isPublished;
     }
 
     public function setIsPublished(bool $isPublish): self
     {
-        $this->isPublish = $isPublish;
+        $this->isPublished = $isPublish;
 
         return $this;
     }

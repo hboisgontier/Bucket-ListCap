@@ -18,8 +18,14 @@
                 <li><a href="{{ path('app_main_index') }}">Home</a></li>
                 <li><a href="{{ path('app_main_aboutus') }}">About us...</a></li>
                 <li><a href="{{ path('app_wish_list') }}">Wishes list</a></li>
+                <li><a href="{{ path('app_wish_add') }}">Add a new wish</a></li>
             </ul>
         </nav>
+        {% for cat, messages in app.flashes %}
+            {% for message in messages %}
+                <div>{{ cat }} : {{ message }}</div>
+            {% endfor %}
+        {% endfor %}
         <main>{% block main %}{% endblock %}</main>
         {% block javascripts %}{% endblock %}
         <footer>
