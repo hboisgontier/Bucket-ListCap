@@ -13,11 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WishController extends AbstractController
 {
-    #[Route('/wish', name: 'app_wish_list')]
-    public function list(WishRepository $repository): Response
+    #[Route('/wish/{page}', name: 'app_wish_list', requirements: ['page'=>'\d+'])]
+    public function list(WishRepository $repository, $page = 0): Response
     {
-        $wishes = $repository->findBy(['isPublished'=>true], ['dateCreated'=>'DESC']);
-        return $this->render('wish/list.html.twig', compact('wishes'));
+        $nbWishesByPage = 6;
+        $offset = $page * $nbWishesByPage;
+        $nbWishes = $repository->countWishes();
+        $lastPage = intdiv($nbWishes, $nbWishesByPage);
+        if($nbWishes % $nbWishesByPage === 0)
+            $lastPage--;
+        $wishes = $repository->findBy(['isPublished'=>true], ['dateCreated'=>'DESC'], $nbWishesByPage, $offset);
+        return $this->render('wish/list.html.twig', compact('wishes', 'page', 'lastPage'));
     }
     #[Route('/wish/details/{id}', name: 'app_wish_details', requirements: ['id'=>'\d+'])]
     public function details($id, WishRepository $repository): Response

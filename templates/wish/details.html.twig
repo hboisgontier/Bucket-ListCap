@@ -2,6 +2,7 @@
 
 {% block main %}
     <h1>{{ wish.title }}</h1>
+    <i>{{ wish.category.name }}</i>
     {% if wish.description %}
         <p>{{ wish.description }}</p>
     {% endif %}

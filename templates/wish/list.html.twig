@@ -6,7 +6,15 @@
     <h1>Wishes List</h1>
     <ul>
         {% for w in wishes %}
-            <li><a href="{{ path('app_wish_details', {'id':w.id}) }}">{{ w.title }}</a></li>
+            <li><a href="{{ path('app_wish_details', {'id':w.id}) }}">{{ w.title }}</a> ({{ w.category.name }})</li>
         {% endfor %}
     </ul>
+    <nav>
+        {% if(page>0) %}
+            <a href="{{ path('app_wish_list', {'page': page-1}) }}">Previous</a>
+        {% endif %}
+        {% if(page<lastPage) %}
+            <a href="{{ path('app_wish_list', {'page': page+1}) }}">Next</a>
+        {% endif %}
+    </nav>
 {% endblock %}
