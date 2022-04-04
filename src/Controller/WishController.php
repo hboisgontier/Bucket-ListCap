@@ -40,7 +40,12 @@ class WishController extends AbstractController
 
     #[Route('/wish/add', name: 'app_wish_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response {
+        if(!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('info', 'Registration required for add a wish.');
+            return $this->redirectToRoute('app_connection');
+        }
         $wish = new Wish();
+        $wish->setAuthor($this->getUser()->getUserIdentifier());
         $form = $this->createForm(WishType::class, $wish);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
